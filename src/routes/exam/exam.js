@@ -12,7 +12,7 @@ const { write, readFile } = require("fs");
 
 2. collegare il post anche al file quiz.json per generare 5 quiz random dal array di domande OK 
 
-3. Eliminare answers per ogni domanda OK
+3. Eliminare da answer la proprieta' isCurrect
 
 4. Creare il route /:id/answer
 
@@ -23,6 +23,7 @@ const { write, readFile } = require("fs");
 
 
 const correct= answers.map((answer)=> answer.isCurrect===true)
+
 if(correct){
     score: +=1
 }else{
@@ -49,7 +50,7 @@ route.post("/start", async (req, res, next) => {
       name: "Admission Test",
       providedAnswer: null,
       totalDuration: 30,
-      question: [
+      questions: [
         questionDB[Math.floor(Math.random() * questionDB.length)],
         // questionDB[Math.floor(Math.random() * questionDB.length)],
         // questionDB[Math.floor(Math.random() * questionDB.length)],
@@ -60,7 +61,9 @@ route.post("/start", async (req, res, next) => {
 
     // delete newUserExam.question[0].answers;
 
-    // newUserExam.question.map((quiz) => delete quiz.answers);
+    newUserExam.questions.map((quiz) =>
+      quiz.answers.map((answer) => delete answer.isCorrect)
+    );
 
     examDB.push(newUserExam);
     writeFile(examPath, examDB);
