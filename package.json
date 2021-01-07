@@ -1,0 +1,31 @@
+{
+  "name": "benchmark-quiz-bachend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon -r dotenv/config ./src/server.js",
+    "start": "nodemon src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Richard-Strive/BENCHMARK-QUIZ-BACKEND.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Richard-Strive/BENCHMARK-QUIZ-BACKEND/issues"
+  },
+  "homepage": "https://github.com/Richard-Strive/BENCHMARK-QUIZ-BACKEND#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-list-endpoints": "^5.0.0",
+    "fs-extra": "^9.0.1",
+    "nodemon": "^2.0.7",
+    "uniqid": "^5.2.0"
+  }
+}
