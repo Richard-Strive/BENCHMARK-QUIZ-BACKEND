@@ -12,11 +12,21 @@ const { write, readFile } = require("fs");
 
 2. collegare il post anche al file quiz.json per generare 5 quiz random dal array di domande OK 
 
-3. Eliminare da answer la proprieta' isCurrect
+3. Eliminare da answer la proprieta' isCurrect OK
 
-4. Creare il route /:id/answer
+4. Creare il route /:id/answer 
 
-5. connetere il route con il file exam.json
+- connetere il route con il file exam.json
+quello che dovrei fare e' di utilizzare il numero che viene dalla risposta dell'utente 
+per selezionare sia la domanda che la risposta
+
+quindi array.findIndex(user.providedAnswer)
+
+per selezionare la domanda 
+
+user.questions.map((quesion)=> question.answer )
+
+
 
 
 
@@ -49,6 +59,7 @@ route.post("/start", async (req, res, next) => {
       isComplated: false,
       name: "Admission Test",
       providedAnswer: null,
+      selectedQuestion: null,
       totalDuration: 30,
       questions: [
         questionDB[Math.floor(Math.random() * questionDB.length)],
@@ -80,14 +91,14 @@ route.post("/:id/answer", async (req, res, next) => {
     const questionDB = await getFile(examQuiz);
 
     const user = examDB.find((user) => user.id === req.params.id);
-    const { question, answer } = req.body;
+    const { selectedQuestion, providedAnswer } = req.body;
 
     if (user) {
       //   newAnswers = {
       //     ...req.body,
       //   };
-      user.providedAnswer = question;
-      user.answers = answer;
+      user.providedAnswer = providedAnswer;
+      user.selectedQuestion = selectedQuestion;
     } else {
       console.log("USER NO FOUND");
     }
