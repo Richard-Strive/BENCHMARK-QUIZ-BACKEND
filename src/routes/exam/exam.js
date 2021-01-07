@@ -14,17 +14,14 @@ const { write, readFile } = require("fs");
 
 3. Eliminare da answer la proprieta' isCurrect OK
 
-4. Creare il route /:id/answer 
+4. Creare il route /:id/answer OK
 
-- connetere il route con il file exam.json
-quello che dovrei fare e' di utilizzare il numero che viene dalla risposta dell'utente 
-per selezionare sia la domanda che la risposta
+voglio ritornare una domanda selezionata dall'array tramite il numero
 
-quindi array.findIndex(user.providedAnswer)
+array.findIndex(user.providedAnswer)
 
-per selezionare la domanda 
 
-user.questions.map((quesion)=> question.answer )
+
 
 
 
@@ -63,10 +60,10 @@ route.post("/start", async (req, res, next) => {
       totalDuration: 30,
       questions: [
         questionDB[Math.floor(Math.random() * questionDB.length)],
-        // questionDB[Math.floor(Math.random() * questionDB.length)],
-        // questionDB[Math.floor(Math.random() * questionDB.length)],
-        // questionDB[Math.floor(Math.random() * questionDB.length)],
-        // questionDB[Math.floor(Math.random() * questionDB.length)],
+        questionDB[Math.floor(Math.random() * questionDB.length)],
+        questionDB[Math.floor(Math.random() * questionDB.length)],
+        questionDB[Math.floor(Math.random() * questionDB.length)],
+        questionDB[Math.floor(Math.random() * questionDB.length)],
       ],
     };
 
@@ -91,19 +88,30 @@ route.post("/:id/answer", async (req, res, next) => {
     const questionDB = await getFile(examQuiz);
 
     const user = examDB.find((user) => user.id === req.params.id);
+
     const { selectedQuestion, providedAnswer } = req.body;
 
+    const selQuestion = examDB.find((user) => user.id === req.params.id)
+      .questions[selectedQuestion];
+    const selAnswer = examDB.find((user) => user.id === req.params.id)
+      .questions[selectedQuestion].answers[providedAnswer];
+
+    // questionSelected = examDB[2].questions[0].answers[0];
+    /* la goccia di miele quando volgio displayare qualcosa di un array devo specificare un index o appure fare un map per interaggire con essa*/
+
     if (user) {
-      //   newAnswers = {
-      //     ...req.body,
-      //   };
+      newAnswers = {
+        ...req.body,
+        selQuestion,
+        selAnswer,
+      };
       user.providedAnswer = providedAnswer;
       user.selectedQuestion = selectedQuestion;
     } else {
       console.log("USER NO FOUND");
     }
 
-    res.status(200).send(user);
+    res.status(200).send(newAnswers);
   } catch (error) {
     console.log(error);
     next(error);
