@@ -5,6 +5,7 @@ const badRequestHandler = (err, req, res, next) => {
     next(error);
   }
 };
+
 const unauthorizedHandler = (err, req, res, next) => {
   if (err.httpStatusCode === 401) {
     res.status(401).send(err.msg || "UNAUTHORIZED!!!");
