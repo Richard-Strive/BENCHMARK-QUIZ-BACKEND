@@ -2,7 +2,7 @@ const express = require("express");
 const { join } = require("path");
 const { getFile, writeFile } = require("../../weapons/swords");
 const uniqid = require("uniqid");
-const { write } = require("fs");
+const { write, readFile } = require("fs");
 
 /*
  Riferimento path const pathQuiz= join(__dirname,"./quiz.json")  OK
@@ -12,7 +12,23 @@ const { write } = require("fs");
 
 2. collegare il post anche al file quiz.json per generare 5 quiz random dal array di domande OK 
 
-3. Eliminare answers 
+3. Eliminare answers per ogni domanda OK
+
+4. Creare il route /:id/answer
+
+5. connetere il route con il file exam.json
+
+
+
+
+
+const correct= answers.map((answer)=> answer.isCurrect===true)
+if(correct){
+    score: +=1
+}else{
+    console.log("The answer it's wrong")
+}
+
 
 */
 
@@ -31,23 +47,49 @@ route.post("/start", async (req, res, next) => {
       examDate: new Date(),
       isComplated: false,
       name: "Admission Test",
+      providedAnswer: null,
       totalDuration: 30,
       question: [
         questionDB[Math.floor(Math.random() * questionDB.length)],
-        questionDB[Math.floor(Math.random() * questionDB.length)],
-        questionDB[Math.floor(Math.random() * questionDB.length)],
-        questionDB[Math.floor(Math.random() * questionDB.length)],
-        questionDB[Math.floor(Math.random() * questionDB.length)],
+        // questionDB[Math.floor(Math.random() * questionDB.length)],
+        // questionDB[Math.floor(Math.random() * questionDB.length)],
+        // questionDB[Math.floor(Math.random() * questionDB.length)],
+        // questionDB[Math.floor(Math.random() * questionDB.length)],
       ],
     };
 
     // delete newUserExam.question[0].answers;
 
-    newUserExam.question.map((quiz) => delete quiz.answers);
+    // newUserExam.question.map((quiz) => delete quiz.answers);
 
     examDB.push(newUserExam);
     writeFile(examPath, examDB);
     res.status(201).send(newUserExam);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+route.post("/:id/answer", async (req, res, next) => {
+  try {
+    const examDB = await getFile(examPath);
+    const questionDB = await getFile(examQuiz);
+
+    const user = examDB.find((user) => user.id === req.params.id);
+    const { question, answer } = req.body;
+
+    if (user) {
+      //   newAnswers = {
+      //     ...req.body,
+      //   };
+      user.providedAnswer = question;
+      user.answers = answer;
+    } else {
+      console.log("USER NO FOUND");
+    }
+
+    res.status(200).send(user);
   } catch (error) {
     console.log(error);
     next(error);
