@@ -57,6 +57,7 @@ route.post("/start", async (req, res, next) => {
       name: "Admission Test",
       providedAnswer: null,
       selectedQuestion: null,
+      score: 0,
       totalDuration: 30,
       questions: [
         questionDB[Math.floor(Math.random() * questionDB.length)],
@@ -110,6 +111,15 @@ route.post("/:id/answer", async (req, res, next) => {
     } else {
       console.log("USER NO FOUND");
     }
+    // if (providedAnswer) {
+    //   user.score += 1;
+    // }
+
+    /*
+1 capire se devo scrivere in un file questi dati
+
+2 sistemare la roba dei punteggi
+*/
 
     res.status(200).send(newAnswers);
   } catch (error) {
