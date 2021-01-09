@@ -86,6 +86,8 @@ route.post("/start", async (req, res, next) => {
 route.post("/:id/answer", async (req, res, next) => {
   try {
     const examDB = await getFile(examPath);
+
+    /* Per aggiungere lo score devo riscrivere il nuovo dato sul file... con writeFile*/
     const questionDB = await getFile(examQuiz);
 
     const user = examDB.find((user) => user.id === req.params.id);
@@ -106,6 +108,7 @@ route.post("/:id/answer", async (req, res, next) => {
         selQuestion,
         selAnswer,
       };
+
       user.providedAnswer = providedAnswer;
       user.selectedQuestion = selectedQuestion;
     } else {
