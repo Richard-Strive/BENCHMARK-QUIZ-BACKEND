@@ -70,9 +70,11 @@ route.post("/start", async (req, res, next) => {
 
     // delete newUserExam.question[0].answers;
 
-    newUserExam.questions.map((quiz) =>
-      quiz.answers.map((answer) => delete answer.isCorrect)
-    );
+    /* "providedAnswer":1,
+  "selectedQuestion":3 */
+
+    // newUserExam.questions.map((quiz) =>
+    //   quiz.answers.map((answer) => delete answer.isCorrect)
 
     examDB.push(newUserExam);
     writeFile(examPath, examDB);
@@ -87,10 +89,27 @@ route.post("/:id/answer", async (req, res, next) => {
   try {
     const examDB = await getFile(examPath);
 
-    /* Per aggiungere lo score devo riscrivere il nuovo dato sul file... con writeFile*/
+    /* 
+    DEVO AGGIUNGERE VALIDATORS E CORS 
+
+    
+    Per aggiungere lo score devo riscrivere il nuovo dato sul file... con writeFile
+    
+    1. Creando nuovo array e poi pushando il nuovo elementto OK 
+    
+    - Con score OK
+
+    - Rimozione domanda appena fatta.
+    
+    /* if(selAnswer.isCorrect===true){
+      user.score=+1
+    }
+    
+    */
     const questionDB = await getFile(examQuiz);
 
-    const user = examDB.find((user) => user.id === req.params.id);
+    const newArray = [];
+    const newUser = examDB.find((user) => user.id === req.params.id);
 
     const { selectedQuestion, providedAnswer } = req.body;
 
@@ -101,16 +120,30 @@ route.post("/:id/answer", async (req, res, next) => {
 
     // questionSelected = examDB[2].questions[0].answers[0];
     /* la goccia di miele quando volgio displayare qualcosa di un array devo specificare un index o appure fare un map per interaggire con essa*/
+    //User.score=+1
+    newArray.push(newUser);
+    //
 
-    if (user) {
+    // newAnswers= ...User
+
+    if (newUser) {
       newAnswers = {
         ...req.body,
         selQuestion,
         selAnswer,
+        test: 0,
       };
 
-      user.providedAnswer = providedAnswer;
-      user.selectedQuestion = selectedQuestion;
+      newUser.providedAnswer = providedAnswer;
+
+      newUser.selectedQuestion = selectedQuestion;
+      if (selAnswer.isCorrect === true) {
+        newUser.score = newUser.score + 1;
+        writeFile(examPath, newArray);
+      } else {
+        newUser.score = newUser.score - 1;
+        writeFile(examPath, newArray);
+      }
     } else {
       console.log("USER NO FOUND");
     }
@@ -124,7 +157,7 @@ route.post("/:id/answer", async (req, res, next) => {
 2 sistemare la roba dei punteggi
 */
 
-    res.status(200).send(newAnswers);
+    res.status(200).send(newUser);
   } catch (error) {
     console.log(error);
     next(error);
