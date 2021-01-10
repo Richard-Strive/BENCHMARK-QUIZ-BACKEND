@@ -85,28 +85,21 @@ route.post("/start", async (req, res, next) => {
   }
 });
 
+route.get("/:id", async (req, res, next) => {
+  try {
+    const examDB = await getFile(examPath);
+    const newUser = examDB.find((user) => user.id === req.params.id);
+
+    res.status(201).send(newUser);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
 route.post("/:id/answer", async (req, res, next) => {
   try {
     const examDB = await getFile(examPath);
-
-    /* 
-    DEVO AGGIUNGERE VALIDATORS E CORS 
-
-    
-    Per aggiungere lo score devo riscrivere il nuovo dato sul file... con writeFile
-    
-    1. Creando nuovo array e poi pushando il nuovo elementto OK 
-    
-    - Con score OK
-
-    - Rimozione domanda appena fatta.
-    
-    /* if(selAnswer.isCorrect===true){
-      user.score=+1
-    }
-    
-    */
-    const questionDB = await getFile(examQuiz);
 
     const newArray = [];
     const newUser = examDB.find((user) => user.id === req.params.id);
@@ -127,16 +120,16 @@ route.post("/:id/answer", async (req, res, next) => {
     // newAnswers= ...User
 
     if (newUser) {
-      newAnswers = {
-        ...req.body,
-        selQuestion,
-        selAnswer,
-        test: 0,
-      };
+      // newAnswers = {
+      //   ...req.body,
+      //   selQuestion,
+      //   selAnswer,
+      //   test: 0,
+      // };
 
       newUser.providedAnswer = providedAnswer;
-
       newUser.selectedQuestion = selectedQuestion;
+
       if (selAnswer.isCorrect === true) {
         newUser.score = newUser.score + 1;
         writeFile(examPath, newArray);
