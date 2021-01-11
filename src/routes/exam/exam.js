@@ -4,6 +4,9 @@ const { getFile, writeFile } = require("../../weapons/swords");
 const uniqid = require("uniqid");
 const { write, readFile } = require("fs");
 
+const { pipeline } = require("stream");
+const { createReadStream } = require("fs-extra");
+
 /*
  Riferimento path const pathQuiz= join(__dirname,"./quiz.json")  OK
  Riferimento path const pathExam= join(__dirname,"./exam.json")  OK
@@ -96,6 +99,28 @@ route.get("/:id", async (req, res, next) => {
     next(error);
   }
 });
+// route.get("/:id/stream", (req, res, next) => {
+//   try {
+//     const source = createReadStream(examPath);
+//     // const newUser = source.find((user) => user.id === req.params.id);
+//     const destination = createWriteStream("exam.json");
+
+//     res.setHeader("Content-disposition", "attachment; filename=whatever.csv");
+
+//     pipeline(source, destination, res, (err) => {
+//       if (err) {
+//         console.log("WHAAAAAT");
+
+//         res.status(201).send(destination);
+//       } else {
+//         console.log("STREAM FINISHED");
+//       }
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     next(error);
+//   }
+// });
 
 route.post("/:id/answer", async (req, res, next) => {
   try {
